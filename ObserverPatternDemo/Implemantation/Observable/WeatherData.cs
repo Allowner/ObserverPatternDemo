@@ -11,25 +11,13 @@ namespace ObserverPatternDemo.Implemantation.Observable
         private float humidity;
         private int pressure;
 
-        public WeatherData()
-        {
-            observers = new List<IObserver<WeatherInfo>>();
-        }
+        public WeatherData() => observers = new List<IObserver<WeatherInfo>>();
 
-        public void Register(IObserver<WeatherInfo> observer)
-        {
-            observers.Add(observer);
-        }
+        public void Register(IObserver<WeatherInfo> observer) => observers.Add(observer);
 
-        public void Unregister(IObserver<WeatherInfo> observer)
-        {
-            observers.Remove(observer);
-        }
+        public void Unregister(IObserver<WeatherInfo> observer) => observers.Remove(observer);
 
-        public void Start()
-        {
-            new Thread(new ThreadStart(Run)).Start();
-        }
+        public void Start() => new Thread(new ThreadStart(Run)).Start();
 
         void Run()
         {
@@ -40,23 +28,19 @@ namespace ObserverPatternDemo.Implemantation.Observable
                 weatherInfo.Humidity = random.Next(80, 100);
                 weatherInfo.Temperature = random.Next(3, 15);
                 weatherInfo.Pressure = random.Next(767, 772);
-                Notify(this, weatherInfo);
+                Notify(weatherInfo);
                 Thread.Sleep(2000);
             }
         }
 
-        private void Notify(IObservable<WeatherInfo> sender, WeatherInfo info)
+        protected virtual void Notify(WeatherInfo info)
         {
             foreach (var observer in observers)
             {
-                observer.Update(sender, info);
+                observer.Update(this, info);
             }
         }
 
-        void IObservable<WeatherInfo>.Notify(IObservable<WeatherInfo> sender, WeatherInfo info)
-        {
-            this.Notify(sender, info);
-        }
-
+        void IObservable<WeatherInfo>.Notify(WeatherInfo info) => Notify(info);
     }
 }

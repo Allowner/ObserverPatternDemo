@@ -13,6 +13,10 @@ namespace ObserverPatternDemo.Implemantation.Observers
             weatherData.Register(this);
         }
 
+        public void Register(IObservable<WeatherInfo> observable) => observable.Register(this);
+
+        public void Unregister(IObservable<WeatherInfo> observable) => observable.Unregister(this);
+
         public void Update(IObservable<WeatherInfo> sender, WeatherInfo info)
         {
             Console.WriteLine("--CurrentReport--");
